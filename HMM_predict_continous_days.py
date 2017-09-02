@@ -81,7 +81,7 @@ class ModelHMM():
     def _predict(self, company, day_start, day_end, n_previous, n_cluster, n_days_predict):
         #df = web.DataReader(company, 'google', day_start, day_end)
         import io
-        df = pd.DataFrame.from_csv(io.StringIO(yqd.load_yahoo_quote(company, '20160101', '20170801')))
+        df = pd.DataFrame.from_csv(io.StringIO(yqd.load_yahoo_quote(company, '19900101', '20000801')))
         #df.to_pickle('test.pkl')
         #sys.exit(0)
 
@@ -147,7 +147,7 @@ class ModelHMM():
 
 ####Running#########
 start_time = time.time()
-day_start = datetime.datetime(2015, 1, 1)
+day_start = datetime.datetime(2014, 1, 1)
 day_end = pd.datetime.today()
 
 model = ModelHMM(company="^GSPC", day_start=day_start, day_end=day_end, n_days_previous=200, n_states=5,
