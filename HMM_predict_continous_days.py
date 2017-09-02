@@ -6,6 +6,7 @@ import pandas as pd
 from matplotlib import cm, pyplot as plt
 from matplotlib.dates import YearLocator, MonthLocator, DateFormatter
 import time
+from yahoo_quote_download import yqd
 
 
 class ModelHMM():
@@ -75,7 +76,9 @@ class ModelHMM():
                       self.n_days_predict)
 
     def _predict(self, company, day_start, day_end, n_previous, n_cluster, n_days_predict):
-        df = web.DataReader(company, 'google', day_start, day_end)
+        #df = web.DataReader(company, 'google', day_start, day_end)
+        import io
+        df = pd.DataFrame.from_csv(io.StringIO(yqd.load_yahoo_quote('GOOGL', '20160101', '20170801')))
         n_days = df.shape[0]
 
         v_X, v_dates, v_close_v, v_volume_v, v_high_v, v_open_v, v_low_v = self._get_value_by_positions(df, 0, n_days)
@@ -94,24 +97,24 @@ class ModelHMM():
             if (self.print_model == True):
                 np.set_printoptions(precision=self.n_decimals)
                 if (self.latex == False):
-                    print "Transform matrix : "
-                    print np.around(np.array(temp_model.transmat_), decimals=self.n_decimals)
-                    print "Starting probability : "
-                    print np.around(np.array(temp_model.startprob_), decimals=self.n_decimals)
+                    print("Transform matrix : ")
+                    print(np.around(np.array(temp_model.transmat_), decimals=self.n_decimals))
+                    print("Starting probability : ")
+                    print(np.around(np.array(temp_model.startprob_), decimals=self.n_decimals))
                 else:
-                    print "Transform matrix : "
+                    print("Transform matrix : ")
                     temp_mat = np.around(np.array(temp_model.transmat_), decimals=self.n_decimals)
 
-                    print "\hline"
+                    print("\hline")
                     for xxx in temp_mat:
-                        print " & ".join([str(x) for x in xxx]), " \\\\"
-                        print "\hline"
+                        print(" & ".join([str(x) for x in xxx]), " \\\\")
+                        print("\hline")
 
-                    print "Starting probability : "
+                    print("Starting probability : ")
                     temp_mat = np.around(np.array(temp_model.startprob_), decimals=self.n_decimals)
-                    print "\hline"
-                    print " & ".join([str(x) for x in temp_mat]), " \\\\"
-                    print "\hline"
+                    print("\hline")
+                    print(" & ".join([str(x) for x in temp_mat]), " \\\\")
+                    print("\hline")
                 self.print_model = False
 
             last_close = v_close_v[day]
@@ -119,7 +122,7 @@ class ModelHMM():
 
             for i in range(day + 1, min(n_days, day + n_days_predict + 1)):
                 if (self.verbose == True):
-                    print "Predicting in", i - n_previous + 1, "th/", n_days - n_previous + 1, "days..."
+                    print("Predicting in", i - n_previous + 1, "th/", n_days - n_previous + 1, "days...")
                 hidden_states = temp_model.predict([[(last_close - last_open) / last_open]])
                 predicted.append(temp_model.means_[hidden_states[0]][0]/(i - day + 1)/5 * last_close + last_close)
                 last_open = last_close
@@ -127,11 +130,11 @@ class ModelHMM():
                 max_day_predicted = max(max_day_predicted, i)
 
         final_time = time.time() - start_time
-        print "Finished predicting", n_days - n_previous + 1, "days in ", final_time, " s"
-        print "Predicting time each day: ", final_time / (n_days - n_previous + 1), " s"
+        print("Finished predicting", n_days - n_previous + 1, "days in ", final_time, " s")
+        print("Predicting time each day: ", final_time / (n_days - n_previous + 1), " s")
         error = self._show_plot(v_dates[n_previous:max_day_predicted + 1], v_close_v[n_previous:max_day_predicted + 1],
                                 predicted, 'Trained data')
-        print "Mean absolute percentage error MAPE = ", error, '%'
+        print("Mean absolute percentage error MAPE = ", error, '%')
 
 
 ####Running#########
