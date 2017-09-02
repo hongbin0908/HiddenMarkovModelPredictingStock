@@ -132,7 +132,7 @@ class ModelHMM():
                     print("Predicting in", i - n_previous + 1, "th/", n_days - n_previous + 1, "days...")
                 hidden_states = temp_model.predict([[(last_close - last_open) / last_open]])
                 #predicted.append(temp_model.means_[hidden_states[0]][0]/(i - day + 1)/5 * last_close + last_close)
-                predicted.append(temp_model.means_[hidden_states[0]][0]/(i - day + 1)/5 * last_close + last_close)
+                predicted.append(temp_model.means_[hidden_states[0]][0]/(i - day + 1)/5 * last_close*0.1 + last_close)
                 last_open = last_close
                 last_close = predicted[-1]
                 max_day_predicted = max(max_day_predicted, i)
