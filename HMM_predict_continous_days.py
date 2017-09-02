@@ -150,6 +150,6 @@ start_time = time.time()
 day_start = datetime.datetime(2014, 1, 1)
 day_end = pd.datetime.today()
 
-model = ModelHMM(company="^GSPC", day_start=day_start, day_end=day_end, n_days_previous=200, n_states=5,
+model = ModelHMM(company="^GSPC", day_start=day_start, day_end=day_end, n_days_previous=200, n_states=10,
                  n_days_predict=1, verbose=True, n_decimals = 3, latex = False)
 model.predict()
