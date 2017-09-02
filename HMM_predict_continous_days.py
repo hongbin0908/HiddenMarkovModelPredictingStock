@@ -132,7 +132,7 @@ class ModelHMM():
                     print("Predicting in", i - n_previous + 1, "th/", n_days - n_previous + 1, "days...")
                 hidden_states = temp_model.predict([[(last_close - last_open) / last_open]])
                 #predicted.append(temp_model.means_[hidden_states[0]][0]/(i - day + 1)/5 * last_close + last_close)
-                predicted.append(temp_model.means_[hidden_states[0]][0]/(i - day + 1)/5 * last_close*0 + last_close*10)
+                predicted.append(temp_model.means_[hidden_states[0]][0]/(i - day + 1)/5 * last_close*0 + last_close)
                 last_open = last_close
                 last_close = predicted[-1]
                 max_day_predicted = max(max_day_predicted, i)
@@ -151,5 +151,5 @@ day_start = datetime.datetime(2016, 1, 1)
 day_end = pd.datetime.today()
 
 model = ModelHMM(company="AAPL", day_start=day_start, day_end=day_end, n_days_previous=100, n_states=10,
-                 n_days_predict=2, verbose=True, n_decimals = 3, latex = False)
+                 n_days_predict=1, verbose=True, n_decimals = 3, latex = False)
 model.predict()
