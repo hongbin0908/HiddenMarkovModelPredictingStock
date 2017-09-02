@@ -150,6 +150,6 @@ start_time = time.time()
 day_start = datetime.datetime(2016, 1, 1)
 day_end = pd.datetime.today()
 
-model = ModelHMM(company="AAPL", day_start=day_start, day_end=day_end, n_days_previous=100, n_states=10,
+model = ModelHMM(company="AAPL", day_start=day_start, day_end=day_end, n_days_previous=100, n_states=5,
                  n_days_predict=1, verbose=True, n_decimals = 3, latex = False)
 model.predict()
