@@ -82,8 +82,10 @@ class ModelHMM():
         #df = web.DataReader(company, 'google', day_start, day_end)
         import io
         df = pd.DataFrame.from_csv(io.StringIO(yqd.load_yahoo_quote(company, '20160101', '20170801')))
-        df.to_csv("test.csv")
+        df.to_pickle('test.pkl')
         sys.exit(0)
+
+        #df = pd.read_csv("test.csv")
         n_days = df.shape[0]
 
         v_X, v_dates, v_close_v, v_volume_v, v_high_v, v_open_v, v_low_v = self._get_value_by_positions(df, 0, n_days)
